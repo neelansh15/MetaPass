@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-// import { encryptPass } from "./crypto_functions";
+import { encryptPass } from "./crypto_functions";
 import { firestore } from "./config";
 var SHA256 = require("crypto-js/sha256");
 
@@ -63,27 +63,29 @@ const login = functions.https.onRequest((request, response) => {
     });
 });
 
-// const addPass = functions.https.onRequest((request, response) => {
-//   const { id, website, username, password } = request.body;
-//   const encryptedPass = encryptPass(password);
-//   firestore
-//     .collection("users")
-//     .doc(id)
-//     .collection("sites")
-//     .doc(website)
-//     .add({
-//       username: encryptedPass,
-//     })
-//     .then(() => {
-//       return response.status(200).send("Added pass successfully");
-//     })
-//     .catch((err: any) => {
-//       console.error(err);
-//       return response.status(404).send({
-//         error: "Unable to add password",
-//         err,
-//       });
-//     });
-// });
+const addPass = functions.https.onRequest((request, response) => {
+  const { id, website, username, password, key } = request.body;
 
-export { register, login };
+  const encryptedPass = encryptPass(password, key);
+  console.log(id, website, username, password, key, encryptedPass);
+  const passwordObj = {};
+  passwordObj[username] = encryptedPass;
+  firestore
+    .collection("users")
+    .doc(id)
+    .collection("sites")
+    .doc(website)
+    .update(passwordObj)
+    .then(() => {
+      return response.status(200).send("Added pass successfully");
+    })
+    .catch((err: any) => {
+      console.error(err);
+      return response.status(404).send({
+        error: "Unable to add password",
+        err,
+      });
+    });
+});
+
+export { register, login, addPass };
