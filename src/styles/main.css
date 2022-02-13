@@ -30,3 +30,22 @@ body,
 .input-field {
   @apply py-1 px-2 border border-gray-200 rounded focus:(border-gray-400 outline-none);
 }
+
+.table {
+  @apply w-full rounded;
+}
+.table td, th {
+  @apply p-2;
+}
+.table td {
+  @apply bg-gray-50;
+}
+.table th {
+  @apply bg-gray-200;
+}
+.table th:first-of-type {
+  @apply rounded-tl;
+}
+.table th:last-of-type {
+  @apply rounded-tr;
+}

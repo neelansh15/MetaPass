@@ -1,9 +1,11 @@
 <template>
   <main class="w-[300px] px-4 py-5 text-center text-gray-700">
-    <Logo />
-    <div>MetaPass</div>
-    <div v-if="userDoc && userDoc.username && userDoc.masterPassword">
-      <button class="btn mt-2" @click="openOptionsPage">Launch Vault</button>
+    <div class="inline-flex space-x-1 items-center">
+      <pixelarticons-lock class="icon-btn text-xl -ml-3" />
+      <h1 class="text-xl">MetaPass</h1>
+    </div>
+    <div v-if="isLoggedIn" class="mt-3">
+      <button class="btn" @click="openOptionsPage">Launch Vault</button>
       <div class="mt-2 text-teal-700">
         <a
           href="https://github.com/neelansh15/MetaPass"
@@ -32,11 +34,14 @@
           class="input-field"
         />
       </div>
-      {{ username }}
-      {{ password }}
       <div class="mt-1 space-x-1">
-        <button class="btn mt-2" @click="loginOrRegister">Login</button>
-        <button class="btn-inverted mt-2" @click="loginOrRegister">
+        <button class="btn mt-2" @click="authenticate(username, password)">
+          Login
+        </button>
+        <button
+          class="btn-inverted mt-2"
+          @click="authenticate(username, password, false)"
+        >
           Register
         </button>
       </div>
@@ -45,25 +50,14 @@
 </template>
 
 <script setup lang="ts">
-import { userDoc } from "~/logic/storage";
 import { ref } from "vue";
+
+import { isLoggedIn, authenticate, logout } from "~/composables/useAuth";
 
 const username = ref("");
 const password = ref("");
 
 function openOptionsPage() {
   browser.runtime.openOptionsPage();
-}
-
-function logout() {
-  userDoc.value = null;
-}
-
-function loginOrRegister() {
-  userDoc.value = {
-    username: "neelansh",
-    masterPassword: "ereeffe",
-  };
-  console.log("login or register");
 }
 </script>
