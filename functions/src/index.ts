@@ -9,8 +9,8 @@ const register = functions.https.onRequest(async (request, response) => {
   console.log(username, password, hashedPass);
   firestore
     .collection("users")
-    .add({
-      _id: username,
+    .doc(username)
+    .set({
       username: username,
       hashedPass: hashedPass,
     })
@@ -42,12 +42,13 @@ const login = functions.https.onRequest((request, response) => {
         });
       }
       const data = doc.data();
+      const storedPass = data.hashedPass;
       if (!data) {
         return response.status(404).send({
           error: "Found document is empty",
         });
       }
-      if (password == hashedPass) {
+      if (storedPass == hashedPass) {
         return response.status(200).send("Passwords match");
       } else {
         return response.status(200).send("Passwords don't match");
