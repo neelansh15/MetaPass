@@ -1,5 +1,5 @@
 import * as functions from "firebase-functions";
-import { encryptPass, decryptPass } from "./crypto_functions";
+import { encryptPass, generateRandomPassword } from "./crypto_functions";
 import { firestore } from "./config";
 var SHA256 = require("crypto-js/sha256");
 
@@ -87,32 +87,9 @@ const addPass = functions.https.onRequest((request, response) => {
     });
 });
 
-const getPass = functions.https.onRequest((request, response) => {
-  const { id, website, username, key } = request.body;
-
-  firestore
-    .collection("users")
-    .doc(id)
-    .collection("sites")
-    .doc(website)
-    .get()
-    .then((doc: any) => {
-      const encryptedPass = doc.get(username);
-      const pass = decryptPass(encryptedPass, key);
-      return response.status(200).send(pass);
-    })
-    .catch((err: any) => {
-      console.error(err);
-      return response.status(404).send({
-        error: "Unable to get password",
-        err,
-      });
-    });
+const generatePassword = functions.https.onRequest((request, response) => {
+  const password = generateRandomPassword()
+  response.send(`${password}`)
 });
 
-const testFun = functions.https.onRequest((request, response) => {
-  //call the func here
-  //return result
-});
-
-export { register, login, getPass, addPass };
+export { register, login, addPass, generatePassword };
