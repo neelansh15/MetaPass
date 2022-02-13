@@ -1,9 +1,88 @@
 import * as functions from "firebase-functions";
+// import { encryptPass } from "./crypto_functions";
+import { firestore } from "./config";
+var SHA256 = require("crypto-js/sha256");
 
-// // Start writing Firebase Functions
-// // https://firebase.google.com/docs/functions/typescript
-//
-// export const helloWorld = functions.https.onRequest((request, response) => {
-//   functions.logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
+const register = functions.https.onRequest(async (request, response) => {
+  const { username, password } = request.body;
+  const hashedPass = SHA256(password).toString();
+  console.log(username, password, hashedPass);
+  firestore
+    .collection("users")
+    .add({
+      _id: username,
+      username: username,
+      hashedPass: hashedPass,
+    })
+    .then(() => {
+      return response.status(200).send("Registered successfully");
+    })
+    .catch((err: any) => {
+      console.error(err);
+      return response.status(404).send({
+        error: "Unable to register",
+        err,
+      });
+    });
+});
+
+const login = functions.https.onRequest((request, response) => {
+  const { username, password } = request.body;
+  const hashedPass = SHA256(password).toString();
+  console.log(username, password, hashedPass);
+
+  firestore
+    .collection("users")
+    .doc(username)
+    .get()
+    .then((doc: any) => {
+      if (!(doc && doc.exists)) {
+        return response.status(404).send({
+          error: "Unable to find the document",
+        });
+      }
+      const data = doc.data();
+      if (!data) {
+        return response.status(404).send({
+          error: "Found document is empty",
+        });
+      }
+      if (password == hashedPass) {
+        return response.status(200).send("Passwords match");
+      } else {
+        return response.status(200).send("Passwords don't match");
+      }
+    })
+    .catch((err: any) => {
+      console.error(err);
+      return response.status(404).send({
+        error: "Unable to retrieve the document",
+        err,
+      });
+    });
+});
+
+// const addPass = functions.https.onRequest((request, response) => {
+//   const { id, website, username, password } = request.body;
+//   const encryptedPass = encryptPass(password);
+//   firestore
+//     .collection("users")
+//     .doc(id)
+//     .collection("sites")
+//     .doc(website)
+//     .add({
+//       username: encryptedPass,
+//     })
+//     .then(() => {
+//       return response.status(200).send("Added pass successfully");
+//     })
+//     .catch((err: any) => {
+//       console.error(err);
+//       return response.status(404).send({
+//         error: "Unable to add password",
+//         err,
+//       });
+//     });
 // });
+
+export { register, login };
