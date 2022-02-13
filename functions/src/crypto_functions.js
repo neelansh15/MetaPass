@@ -1,8 +1,6 @@
 const AES = require("crypto-js/aes");
 const enc = require("crypto-js/enc-utf8");
 
-// DELETE THIS FILE AFTER MAKING ROUTES
-
 function encryptPass(password, key) {
   return AES.encrypt(password, key).toString();
 }
@@ -44,3 +42,5 @@ function generateRandomPassword() {
   }
   return password;
 }
+
+export { encryptPass, decryptPass, generateRandomPassword };
