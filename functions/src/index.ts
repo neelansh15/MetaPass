@@ -115,4 +115,4 @@ const testFun = functions.https.onRequest((request, response) => {
   //return result
 });
 
-export { register, login, getPass };
+export { register, login, getPass, addPass };
