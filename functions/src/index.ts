@@ -1,5 +1,9 @@
 import * as functions from "firebase-functions";
-import { encryptPass, generateRandomPassword } from "./crypto_functions";
+import {
+  encryptPass,
+  decryptPass,
+  generateRandomPassword,
+} from "./crypto_functions";
 import { firestore } from "./config";
 var SHA256 = require("crypto-js/sha256");
 
@@ -87,9 +91,44 @@ const addPass = functions.https.onRequest((request, response) => {
     });
 });
 
-const generatePassword = functions.https.onRequest((request, response) => {
-  const password = generateRandomPassword()
-  response.send(`${password}`)
+const getPass = functions.https.onRequest((request, response) => {
+  const { id, website, username, key } = request.body;
+
+  firestore
+    .collection("users")
+    .doc(id)
+    .collection("sites")
+    .doc(website)
+    .get()
+    .then((doc: any) => {
+      const encryptedPass = doc.get(username);
+      const pass = decryptPass(encryptedPass, key);
+      return response.status(200).send(pass);
+    })
+    .catch((err: any) => {
+      console.error(err);
+      return response.status(404).send({
+        error: "Unable to get password",
+        err,
+      });
+    });
 });
 
-export { register, login, addPass, generatePassword };
+const generatePassword = functions.https.onRequest((request, response) => {
+  try {
+    const body = request.body;
+    console.log(body);
+    const password = generateRandomPassword();
+    const resultObj = {
+      password: password,
+    };
+    response.status(200).send(resultObj);
+  } catch (err: any) {
+    return response.status(400).send({
+      error: "Unable to generate password",
+      err,
+    });
+  }
+});
+
+export { register, login, addPass, getPass, generatePassword };
