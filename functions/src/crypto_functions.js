@@ -15,7 +15,7 @@ function generateRandomPassword() {
   while (passwordLength < 8 || passwordLength > 15) {
     passwordLength = Math.random() * 15;
   }
-  password = "";
+  let password = "";
   while (password.length < passwordLength) {
     let type = Math.random();
     if (type < 0.3) {
