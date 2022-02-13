@@ -6,7 +6,14 @@ export const storageDemo = useStorageLocal("webext-demo", "Storage Demo", {
 
 export const username = useStorageLocal("username", null); // testing
 
-export const userDoc = useStorageLocal("userDoc", null, {
-  listenToStorageChanges: true,
-  deep: true,
-});
+export const userDoc = useStorageLocal(
+  "userDoc",
+  {
+    username: null as string | null,
+    masterPassword: null as string | null,
+  },
+  {
+    listenToStorageChanges: true,
+    deep: true,
+  }
+);

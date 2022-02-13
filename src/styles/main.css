@@ -26,3 +26,7 @@ body,
     hover:opacity-100 hover:text-teal-600;
   font-size: 0.9em;
 }
+
+.input-field {
+  @apply py-1 px-2 border border-gray-200 rounded focus:(border-gray-400 outline-none);
+}
