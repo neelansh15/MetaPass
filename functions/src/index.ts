@@ -19,7 +19,7 @@ const register = functions.https.onRequest(async (request, response) => {
       hashedPass: hashedPass,
     })
     .then(() => {
-      return response.status(200).send("Registered successfully");
+      return response.status(200).send({ msg: "Registered successfully" });
     })
     .catch((err: any) => {
       console.error(err);
@@ -53,9 +53,9 @@ const login = functions.https.onRequest((request, response) => {
         });
       }
       if (storedPass == hashedPass) {
-        return response.status(200).send("Passwords match");
+        return response.status(200).send({ msg: "Passwords match" });
       } else {
-        return response.status(200).send("Passwords don't match");
+        return response.status(200).send({ msg: "Passwords don't match" });
       }
     })
     .catch((err: any) => {
@@ -80,7 +80,7 @@ const addPass = functions.https.onRequest((request, response) => {
     .doc(website)
     .update(passwordObj)
     .then(() => {
-      return response.status(200).send("Added pass successfully");
+      return response.status(200).send({ msg: "Added pass successfully" });
     })
     .catch((err: any) => {
       console.error(err);
@@ -103,7 +103,10 @@ const getPass = functions.https.onRequest((request, response) => {
     .then((doc: any) => {
       const encryptedPass = doc.get(username);
       const pass = decryptPass(encryptedPass, key);
-      return response.status(200).send(pass);
+      const result = {
+        password: pass,
+      };
+      return response.status(200).send(result);
     })
     .catch((err: any) => {
       console.error(err);
@@ -116,13 +119,11 @@ const getPass = functions.https.onRequest((request, response) => {
 
 const generatePassword = functions.https.onRequest((request, response) => {
   try {
-    const body = request.body;
-    console.log(body);
     const password = generateRandomPassword();
-    const resultObj = {
+    const result = {
       password: password,
     };
-    response.status(200).send(resultObj);
+    return response.status(200).send(result);
   } catch (err: any) {
     return response.status(400).send({
       error: "Unable to generate password",
