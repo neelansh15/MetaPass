@@ -34,8 +34,9 @@ body,
 .table {
   @apply w-full rounded;
 }
-.table td, th {
-  @apply p-2;
+.table td,
+th {
+  @apply p-3 text-left;
 }
 .table td {
   @apply bg-gray-50;

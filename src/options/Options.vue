@@ -63,7 +63,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
 import { userDoc } from "~/logic";
 import { isLoggedIn, authenticate, logout } from "~/composables/useAuth";
 

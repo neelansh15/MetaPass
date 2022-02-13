@@ -50,8 +50,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
-
 import { isLoggedIn, authenticate, logout } from "~/composables/useAuth";
 
 const username = ref("");
