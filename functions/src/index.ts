@@ -78,9 +78,35 @@ const addPass = functions.https.onRequest((request, response) => {
     .doc(id)
     .collection("sites")
     .doc(website)
+    .set(passwordObj, { merge: true })
+    .then(() => {
+      return response.status(200).send({ msg: "Added password successfully" });
+    })
+    .catch((err: any) => {
+      console.error(err);
+      return response.status(404).send({
+        error: "Unable to add password",
+        err,
+      });
+    });
+});
+const updatePass = functions.https.onRequest((request, response) => {
+  const { id, website, username, password, key } = request.body;
+
+  const encryptedPass = encryptPass(password, key);
+  console.log(encryptedPass, password, key);
+  const passwordObj = {};
+  passwordObj[username] = encryptedPass;
+  firestore
+    .collection("users")
+    .doc(id)
+    .collection("sites")
+    .doc(website)
     .update(passwordObj)
     .then(() => {
-      return response.status(200).send({ msg: "Added pass successfully" });
+      return response
+        .status(200)
+        .send({ msg: "Updated password successfully" });
     })
     .catch((err: any) => {
       console.error(err);
@@ -117,19 +143,53 @@ const getPass = functions.https.onRequest((request, response) => {
     });
 });
 
-const generatePassword = functions.https.onRequest((request, response) => {
-  try {
-    const password = generateRandomPassword();
-    const result = {
-      password: password,
-    };
-    return response.status(200).send(result);
-  } catch (err: any) {
-    return response.status(400).send({
-      error: "Unable to generate password",
-      err,
+const getAllPass = functions.https.onRequest((request, response) => {
+  const { id } = request.body;
+
+  firestore
+    .collection("users")
+    .doc(id)
+    .collection("sites")
+    .get()
+    .then((snapshot: any) => {
+      let result = [];
+      snapshot.docs.map(doc => {
+        result.push({ ...doc.data(), site: doc.id });
+      });
+      return response.status(200).send(result);
+    })
+    .catch((err: any) => {
+      console.error(err);
+      return response.status(404).send({
+        error: "Unable to get password",
+        err,
+      });
     });
-  }
 });
 
-export { register, login, addPass, getPass, generatePassword };
+const generatePassword = functions.https.onRequest(
+  (request: any, response: any) => {
+    try {
+      const password = generateRandomPassword();
+      const result = {
+        password: password,
+      };
+      return response.status(200).send(result);
+    } catch (err) {
+      return response.status(400).send({
+        error: "Unable to generate password",
+        err,
+      });
+    }
+  },
+);
+
+export {
+  register,
+  login,
+  addPass,
+  getPass,
+  generatePassword,
+  getAllPass,
+  updatePass,
+};
