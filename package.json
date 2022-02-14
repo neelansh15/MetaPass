@@ -1,6 +1,6 @@
 {
-  "name": "vitesse-webext",
-  "displayName": "Vitesse WebExt",
+  "name": "metapass",
+  "displayName": "MetaPass",
   "version": "0.0.1",
   "description": "[description]",
   "private": true,
@@ -55,6 +55,7 @@
     "webextension-polyfill": "^0.8.0"
   },
   "dependencies": {
+    "axios": "^0.26.0",
     "crypto-js": "^4.1.1",
     "firebase-admin": "^10.0.2",
     "firebase-functions": "^3.18.0"

@@ -65,7 +65,17 @@
 <script setup lang="ts">
 import { userDoc } from "~/logic";
 import { isLoggedIn, authenticate, logout } from "~/composables/useAuth";
+import { getSites } from "~/composables/useAPI";
 
 const username = ref("");
 const password = ref("");
+
+const sites = ref([]);
+
+onMounted(async () => {
+  // Fetch sites for user
+  if (isLoggedIn.value) {
+    sites.value = await getSites();
+  }
+});
 </script>
