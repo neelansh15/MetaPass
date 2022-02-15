@@ -12,9 +12,41 @@ body,
     disabled:cursor-default disabled:bg-gray-600 disabled:opacity-50;
 }
 
+.btn-inverted {
+  @apply px-4 py-1 rounded inline-block
+  border
+    border-teal-600 text-teal-600  cursor-pointer
+    hover:bg-gray-100
+    disabled:cursor-default disabled:bg-gray-600 disabled:opacity-50;
+}
+
 .icon-btn {
   @apply inline-block cursor-pointer select-none
     opacity-75 transition duration-200 ease-in-out
     hover:opacity-100 hover:text-teal-600;
   font-size: 0.9em;
+}
+
+.input-field {
+  @apply py-1 px-2 border border-gray-200 rounded focus:(border-gray-400 outline-none);
+}
+
+.table {
+  @apply w-full rounded;
+}
+.table td,
+th {
+  @apply p-3 text-left;
+}
+.table td {
+  @apply bg-gray-50;
+}
+.table th {
+  @apply bg-gray-200;
+}
+.table th:first-of-type {
+  @apply rounded-tl;
+}
+.table th:last-of-type {
+  @apply rounded-tr;
 }

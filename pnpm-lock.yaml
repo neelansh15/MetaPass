@@ -11,6 +11,7 @@ specifiers:
   '@vitejs/plugin-vue': ^1.9.2
   '@vue/compiler-sfc': ^3.2.19
   '@vueuse/core': ^7.5.1
+  axios: ^0.26.0
   chokidar: ^3.5.2
   cross-env: ^7.0.3
   crx: ^5.0.1
@@ -36,6 +37,7 @@ specifiers:
   webextension-polyfill: ^0.8.0
 
 dependencies:
+  axios: 0.26.0
   crypto-js: 4.1.1
   firebase-admin: 10.0.2
   firebase-functions: 3.18.0_firebase-admin@10.0.2
@@ -1571,6 +1573,14 @@ packages:
   /aws4/1.11.0:
     resolution: {integrity: sha512-xh1Rl34h6Fi1DC2WWKfxUTVqRsNnr6LsKz2+hfwDxQJWmrx8+c7ylaqBMcHfl1U1r2dsifOvKX3LQuLNZ+XSvA==}
     dev: true
+
+  /axios/0.26.0:
+    resolution: {integrity: sha512-lKoGLMYtHvFrPVt3r+RBMp9nh34N0M8zEfCWqdWZx6phynIEhQqAdydpyBAAG211zlhX9Rgu08cOamy6XjE5Og==}
+    dependencies:
+      follow-redirects: 1.14.8
+    transitivePeerDependencies:
+      - debug
+    dev: false
 
   /balanced-match/1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -3255,6 +3265,16 @@ packages:
     resolution: {integrity: sha512-0Bk1AsliuYB550zr4JV9AYhsETsD3ELXUQzdXGJfIc1Ni/ukAfBdQInDhVMYJUaT2QxoamNslwkYF7MlOrPUwg==}
     engines: {node: '>=8.9.0'}
     dev: true
+
+  /follow-redirects/1.14.8:
+    resolution: {integrity: sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dev: false
 
   /forever-agent/0.6.1:
     resolution: {integrity: sha1-+8cfDEGt6zf5bFd60e1C2P2sypE=}
