@@ -11,6 +11,11 @@ const register = functions.https.onRequest(async (request, response) => {
   const { username, password } = request.body;
   const hashedPass = SHA256(password).toString();
   console.log(username, password, hashedPass);
+  const userDocRef = firestore.collection("users").doc(username);
+  const doc = await userDocRef.get();
+  if (doc.exists) {
+    return response.status(400).send({ msg: "Username taken" });
+  }
   firestore
     .collection("users")
     .doc(username)
