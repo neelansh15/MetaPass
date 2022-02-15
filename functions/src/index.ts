@@ -10,7 +10,6 @@ var SHA256 = require("crypto-js/sha256");
 const register = functions.https.onRequest(async (request, response) => {
   const { username, password } = request.body;
   const hashedPass = SHA256(password).toString();
-  console.log(username, password, hashedPass);
   const userDocRef = firestore.collection("users").doc(username);
   const doc = await userDocRef.get();
   if (doc.exists) {
@@ -38,7 +37,6 @@ const register = functions.https.onRequest(async (request, response) => {
 const login = functions.https.onRequest((request, response) => {
   const { username, password } = request.body;
   const hashedPass = SHA256(password).toString();
-  console.log(username, password, hashedPass);
 
   firestore
     .collection("users")
@@ -99,7 +97,6 @@ const updatePass = functions.https.onRequest((request, response) => {
   const { id, website, username, password, key } = request.body;
 
   const encryptedPass = encryptPass(password, key);
-  console.log(encryptedPass, password, key);
   const passwordObj = {};
   passwordObj[username] = encryptedPass;
   firestore
