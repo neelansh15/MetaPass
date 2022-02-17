@@ -100,24 +100,11 @@ const password = ref("");
 const sites = ref([] as any[]);
 
 watchEffect(() => {
-  if (isLoggedIn.value) fetchData();
+  if (isLoggedIn.value === true) fetchData();
 });
 
 async function fetchData() {
   // Fetch sites for user
-  console.log("isLoggedIn", isLoggedIn.value);
-  sites.value = await getSites();
-  // const sitesRaw: any[] = await getSites();
-  // if (sitesRaw.length > 0) {
-  //   sitesRaw.forEach((siteRaw) => {
-  //     const siteName = siteRaw.site;
-  //     delete siteRaw["site"];
-  //     sites.value.push({
-  //       site: siteName,
-  //       values: Object.entries(siteRaw).slice(1),
-  //     });
-  //   });
-  //   console.log("Sites processed: ", sites.value);
-  // }
+  sites.value = await getSites(userDoc.value.username?.toLowerCase());
 }
 </script>
