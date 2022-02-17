@@ -5,5 +5,5 @@ const props = defineProps({
 </script>
 
 <template>
-  <input type="password" :value="props.value" disabled />
+  <input type="password" :value="props.value" size="25" disabled />
 </template>

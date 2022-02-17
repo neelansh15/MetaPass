@@ -52,7 +52,24 @@
           <th>Email / Username</th>
           <th>Password</th>
         </tr>
-        <tr v-for="site in sites" :key="site.site">
+        <template v-for="site in sites" :key="site.site">
+          <tr>
+            <td class="font-semibold">
+              {{ site.site }}
+            </td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr v-for="(value, key) in site" :key="key">
+            <template v-if="key.toString() !== 'site'">
+              <td></td>
+              <td>{{ key }}</td>
+              <td><password :value="value" /></td>
+            </template>
+          </tr>
+        </template>
+
+        <!-- <tr v-for="site in sites" :key="site.site">
           <td :rowspan="site.values.length">{{ site.site }}</td>
           <td>
             <p v-for="pair in site.values" :key="pair[0]" class="py-1">
@@ -64,7 +81,7 @@
               <password1 :value="pair[1]" />
             </p>
           </td>
-        </tr>
+        </tr> -->
       </table>
       <div v-else>No site data found. Add your first one!</div>
     </section>
@@ -75,7 +92,7 @@
 import { userDoc } from "~/logic";
 import { isLoggedIn, authenticate, logout } from "~/composables/useAuth";
 import { getSites } from "~/composables/useAPI";
-import Password1 from "~/components/Password.vue";
+import Password from "~/components/Password.vue";
 
 const username = ref("");
 const password = ref("");
@@ -89,18 +106,18 @@ watchEffect(() => {
 async function fetchData() {
   // Fetch sites for user
   console.log("isLoggedIn", isLoggedIn.value);
-
-  const sitesRaw: any[] = await getSites();
-  if (sitesRaw.length > 0) {
-    sitesRaw.forEach((siteRaw) => {
-      const siteName = siteRaw.site;
-      delete siteRaw["site"];
-      sites.value.push({
-        site: siteName,
-        values: Object.entries(siteRaw).slice(1),
-      });
-    });
-    console.log("Sites processed: ", sites.value);
-  }
+  sites.value = await getSites();
+  // const sitesRaw: any[] = await getSites();
+  // if (sitesRaw.length > 0) {
+  //   sitesRaw.forEach((siteRaw) => {
+  //     const siteName = siteRaw.site;
+  //     delete siteRaw["site"];
+  //     sites.value.push({
+  //       site: siteName,
+  //       values: Object.entries(siteRaw).slice(1),
+  //     });
+  //   });
+  //   console.log("Sites processed: ", sites.value);
+  // }
 }
 </script>
