@@ -9,6 +9,7 @@ var SHA256 = require("crypto-js/sha256");
 
 const register = functions.https.onRequest(async (request, response) => {
   const { username, password } = request.body;
+  console.log(username, password);
   const hashedPass = SHA256(password).toString();
   const userDocRef = firestore.collection("users").doc(username);
   const doc = await userDocRef.get();
@@ -23,7 +24,9 @@ const register = functions.https.onRequest(async (request, response) => {
       hashedPass: hashedPass,
     })
     .then(() => {
-      return response.status(200).send({ msg: "Registered successfully" });
+      return response
+        .status(200)
+        .send({ msg: "Registered successfully", pass: hashedPass });
     })
     .catch((err: any) => {
       console.error(err);
@@ -56,7 +59,9 @@ const login = functions.https.onRequest((request, response) => {
         });
       }
       if (storedPass == hashedPass) {
-        return response.status(200).send({ msg: "Passwords match" });
+        return response
+          .status(200)
+          .send({ msg: "Passwords match", pass: hashedPass });
       } else {
         return response.status(200).send({ msg: "Passwords don't match" });
       }

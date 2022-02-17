@@ -1,17 +1,32 @@
 import { userDoc } from "~/logic/storage";
+import { login, register } from "~/composables/useAPI";
 
 export const isLoggedIn = computed(() =>
-  userDoc.value.username && userDoc.value.masterPassword ? true : false
+  userDoc.value.username && userDoc.value.masterPassword ? true : false,
 );
 
-export function authenticate(
+export async function authenticate(
   username: string,
   password: string,
-  isLogin = true
+  isLogin = true,
 ) {
+  let data: any = {};
+  if (isLogin) {
+    data = await login(username, password);
+    if (data == []) {
+      console.log("Cant login");
+      data.pass = -1;
+    }
+  } else {
+    data = await register(username, password);
+    if (data == []) {
+      console.log("Cant register");
+      data.pass = -1;
+    }
+  }
   userDoc.value = {
     username,
-    masterPassword: password,
+    masterPassword: data.pass,
   };
 }
 
