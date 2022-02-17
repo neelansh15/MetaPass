@@ -38,12 +38,20 @@ const register = async (email: String, password: String) => {
   }
 };
 const addPass = async (website: String, username: String, password: String) => {
-  const { data, status } = await axios.post(API_URL + "/addPass", {
-    id: userDoc.username,
+  console.log("passing data to addpass", {
+    id: userDoc.value.username,
     website: website,
     username: username,
     password: password,
-    key: userDoc.masterPassword,
+    key: userDoc.value.masterPassword,
+  });
+
+  const { data, status } = await axios.post(API_URL + "/addPass", {
+    id: userDoc.value.username,
+    website: website,
+    username: username,
+    password: password,
+    key: userDoc.value.masterPassword,
   });
   if (status === 200) return data;
   else {
@@ -54,14 +62,14 @@ const addPass = async (website: String, username: String, password: String) => {
 const updatePass = async (
   website: String,
   username: String,
-  password: String,
+  password: String
 ) => {
   const { data, status } = await axios.post(API_URL + "/updatePass", {
-    id: userDoc.username,
+    id: userDoc.value.username,
     website: website,
     username: username,
     password: password,
-    key: userDoc.masterPassword,
+    key: userDoc.value.masterPassword,
   });
   if (status === 200) return data;
   else {
@@ -71,10 +79,10 @@ const updatePass = async (
 };
 const getPass = async (website: String, username: String) => {
   const { data, status } = await axios.post(API_URL + "/getPass", {
-    id: userDoc.username,
+    id: userDoc.value.username,
     website: website,
     username: username,
-    key: userDoc.masterPassword,
+    key: userDoc.value.masterPassword,
   });
   if (status === 200) return data;
   else {
