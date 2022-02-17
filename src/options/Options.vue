@@ -46,18 +46,27 @@
 
     <section v-else class="mt-6">
       <h2 class="text-xl">Sites</h2>
-      <table class="table mt-2">
+      <table v-if="sites.length > 0" class="table mt-2">
         <tr>
           <th>Site</th>
           <th>Email / Username</th>
           <th>Password</th>
         </tr>
-        <tr v-for="n in 10" :key="n">
-          <td>1</td>
-          <td>2</td>
-          <td>3</td>
+        <tr v-for="site in sites" :key="site.site">
+          <td :rowspan="site.values.length">{{ site.site }}</td>
+          <td>
+            <p v-for="pair in site.values" :key="pair[0]" class="py-1">
+              {{ pair[0] }}
+            </p>
+          </td>
+          <td>
+            <p v-for="pair in site.values" :key="pair[0]" class="py-1">
+              <password1 :value="pair[1]" />
+            </p>
+          </td>
         </tr>
       </table>
+      <div v-else>No site data found. Add your first one!</div>
     </section>
   </main>
 </template>
@@ -66,16 +75,32 @@
 import { userDoc } from "~/logic";
 import { isLoggedIn, authenticate, logout } from "~/composables/useAuth";
 import { getSites } from "~/composables/useAPI";
+import Password1 from "~/components/Password.vue";
 
 const username = ref("");
 const password = ref("");
 
-const sites = ref([]);
+const sites = ref([] as any[]);
 
-onMounted(async () => {
-  // Fetch sites for user
-  if (isLoggedIn.value) {
-    sites.value = await getSites();
-  }
+watchEffect(() => {
+  if (isLoggedIn.value) fetchData();
 });
+
+async function fetchData() {
+  // Fetch sites for user
+  console.log("isLoggedIn", isLoggedIn.value);
+
+  const sitesRaw: any[] = await getSites();
+  if (sitesRaw.length > 0) {
+    sitesRaw.forEach((siteRaw) => {
+      const siteName = siteRaw.site;
+      delete siteRaw["site"];
+      sites.value.push({
+        site: siteName,
+        values: Object.entries(siteRaw).slice(1),
+      });
+    });
+    console.log("Sites processed: ", sites.value);
+  }
+}
 </script>
